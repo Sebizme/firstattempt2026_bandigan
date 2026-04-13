@@ -131,9 +131,23 @@ Act as a senior developer and convert this phone application design into a websi
 
 #### Screenshots
 
-### Home Page
+### Login Page
 ![Login Page](./images/Screenshot1.png)
 
-### Login Page
+### Home Page
 ![Home Page](./images/Screenshot2.png)
+
+### Job Board Page
+![Job Board Page](./images/Screenshot3.png)
+
+### Application Page
+![Application Page](./images/Screenshot4.png)
+
+### Profile Page
+![Profile Page](./images/Screenshot5.png)
+
+### Settings Page
+![Settings Page](./images/Screenshot6.png)
+
+
 
