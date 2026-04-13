@@ -1,2 +1,2 @@
-# firstattempt2026_Bandigan
-Blue Links Website design
+# Bandigan
+# Framework: Angular JS
