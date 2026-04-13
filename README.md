@@ -1,2 +1,2 @@
 # Bandigan
-# Framework: Angular JS
+## Framework: Angular JS
