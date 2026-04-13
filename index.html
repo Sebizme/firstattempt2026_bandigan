@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html class="light" lang="en" ng-app="BlueLinksApp">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Blue Links | University Alumni Portal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#454652", "outline-variant": "#c5c5d4", "error": "#ba1a1a",
+            "on-primary-fixed-variant": "#283e9a", "secondary-container": "#d3e2ed",
+            "primary-container": "#002080", "surface": "#f7f9fc", "on-tertiary-container": "#e47459",
+            "secondary": "#526069", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eff1f4",
+            "tertiary-fixed-dim": "#ffb4a3", "surface-container-low": "#f2f4f7", "secondary-fixed-dim": "#bac9d3",
+            "on-secondary-container": "#56656e", "on-background": "#191c1e", "tertiary-fixed": "#ffdad2",
+            "surface-bright": "#f7f9fc", "on-tertiary-fixed-variant": "#802914", "on-secondary": "#ffffff",
+            "surface-container-high": "#e6e8eb", "on-primary": "#ffffff", "on-tertiary": "#ffffff",
+            "on-surface": "#191c1e", "inverse-primary": "#b9c3ff", "tertiary": "#370600",
+            "primary-fixed-dim": "#b9c3ff", "on-tertiary-fixed": "#3d0700", "on-primary-container": "#7a8eee",
+            "surface-container": "#eceef1", "surface-variant": "#e0e3e6", "primary": "#00104e",
+            "tertiary-container": "#5c0f00", "surface-tint": "#4257b3", "on-error": "#ffffff",
+            "outline": "#757683", "primary-fixed": "#dde1ff", "secondary-fixed": "#d6e5ef",
+            "on-secondary-fixed": "#0f1d25", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#3b4951",
+            "on-error-container": "#93000a", "background": "#f7f9fc", "surface-container-highest": "#e0e3e6",
+            "inverse-surface": "#2d3133", "surface-dim": "#d8dadd", "on-primary-fixed": "#001356"
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+          fontFamily: { "headline": ["Manrope"], "body": ["Inter"], "label": ["Inter"] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-headline {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+
+    .knight-gradient {
+      background: linear-gradient(135deg, #00104e 0%, #002080 100%);
+    }
+
+    .hero-pattern {
+      background-color: #002080;
+      background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+      background-size: 32px 32px;
+    }
+
+    .stealth-gradient {
+      background: linear-gradient(135deg, #00104e 0%, #002080 100%);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f7f9fc;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #dde1ff;
+      border-radius: 10px;
+    }
+
+    /* Simple page visibility - remove all conflicts */
+    .page-login,
+    .page-home,
+    .page-jobs,
+    .page-applications,
+    .page-profile,
+    .page-settings {
+      display: none;
+    }
+
+    .page-login.visible,
+    .page-home.visible,
+    .page-jobs.visible,
+    .page-applications.visible,
+    .page-profile.visible,
+    .page-settings.visible {
+      display: block;
+    }
+
+    .page-jobs.visible,
+    .page-settings.visible {
+      display: flex !important;
+    }
+
+    nav a.nav-active {
+      color: #00104e !important;
+      font-weight: 700;
+      border-bottom: 2px solid #00104e;
+      padding-bottom: 4px;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .5;
+      }
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface min-h-screen flex flex-col" ng-controller="MainController as ctrl">
+
+  <!-- PAGE: LOGIN -->
+  <div ng-class="{'visible': ctrl.currentPage === 'login'}" class="page-login">
+    <main class="w-full grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+      <section class="hidden lg:flex flex-col justify-between p-16 knight-gradient relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+          <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern height="40" id="grid" patternUnits="userSpaceOnUse" width="40">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"></path>
+              </pattern>
+            </defs>
+            <rect fill="url(#grid)" height="100%" width="100%"></rect>
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-12">
+            <span class="material-symbols-outlined text-primary-fixed text-4xl"
+              style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+            <h1 class="font-headline text-2xl font-black tracking-tighter text-white">Blue Links</h1>
+          </div>
+          <div class="max-w-md">
+            <p class="text-xs uppercase tracking-widest text-primary-fixed/70 mb-4">University Alumni Association</p>
+            <h2 class="font-headline text-5xl font-bold text-white leading-tight mb-8">Reconnect with your heritage.
+            </h2>
+            <p class="text-primary-fixed/80 text-lg leading-relaxed mb-12">Join a global network of over 50,000 alumni.
+              Access exclusive career opportunities, mentorship, and lifelong learning resources.</p>
+          </div>
+        </div>
+        <div class="relative z-10 flex flex-col gap-8">
+          <div class="flex items-center gap-4">
+            <div class="flex -space-x-4">
+              <img class="w-12 h-12 rounded-full border-2 border-primary-container object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwtjsXw-mEMr6A0mrllQGG3NiIiH9TaJGbZ-HAESTFiQDqGkPXft61q_Uju2BtaS2ntHTHz_ZZ_d7PlfQgvB_aOONJlAWGx42sirhWAWet8LEZtA_Gy_zQQHNsyLvLI1ALGBTtHmfLC073EoZIiYbko1RoDQbpz9zdWFhdNr3hmvtYStvaBWdvnxQlZhEML1FH0lIwOMrrCJ_ivHLTa2Yx9Z_7DhNzpGZ2J08w0KyHi9BH0KQParYe8Cxw2b5YUvMR5vo85RqZp9w"
+                alt="alumni" />
+              <img class="w-12 h-12 rounded-full border-2 border-primary-container object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg-MP53A4Z84ECE31oU9Voi4gYdBiTYodg7tqeZPs0Y95TwHn3B7svJdmus-VXr07uZOxi3yX5eLrY-G0CbV1KC80KrvRGLRSP5EO7GgmUug8uIEEDJ-VclripEhsrgli4K2EzHxovElIpVqYLeSjhp9long5_Uf22vTNmX815rDxCP_BQ9D4m-2k8Ym9q4f0KPS7HcGHBge3bwYXbGSl4wj0uQYQ6j81mXTj7gub2SDf10SOjQI0beUDx2C1maZesBywzbjuE4TY"
+                alt="alumni" />
+              <img class="w-12 h-12 rounded-full border-2 border-primary-container object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfKuI37hnapBBormG_pKA3d5EKnpjozJ5GNMJgXCA5rmtGz_mWrk9FXdC14Pfmikys4xmabQmFr72w7v8-ek1IeL3iDc5Ig5p-FNNJAkKi29wtp2WXAkEkXi5SPqwwicwunkplhCuZyIRr1G-RlJJX7sS1JD331hwnxoWaV5m9s5qYUpvy3P-iK3YoE5ahlHMXdHyKqmAG0cXs13-MI2x_ytXeD7b_Q4xdlldtoRwBx0gKhejdlE95bJ9vMzYqY-WurXL8PiDdCBU"
+                alt="alumni" />
+            </div>
+            <p class="text-sm text-primary-fixed/60 font-medium italic">"Blue Links helped me land my senior director
+              role at TechCorp." — Class of '14</p>
+          </div>
+          <div class="h-[200px] w-full rounded-lg overflow-hidden grayscale contrast-125 opacity-40">
+            <img class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqiJpxoKy1yySG8dP7gm3X1j3TxSB40CGDwDZKp8yElCcCU7vVjFAOIWsAnB0yt0clJ6dpZdHIW_xEf85HHYqDMhyUuV3GIib4bA5b-GdqBqqjrgqx_vMyDxYoE4Ava9r5bq9PCHrH6ImQP6i2EGMV-QkUZpce42eYiR0oTrLcbWCDPV0AUkBMJJlSt_70DvJ2OOrVD8TCdZFTpcTfXZ9hDOxeaLjVxZK31_gP35rFqQo1LPDE9aFClEjehNFIQCyEcfUPWyX9Cic"
+              alt="campus" />
+          </div>
+        </div>
+      </section>
+      <section class="flex flex-col justify-center items-center p-8 lg:p-24 bg-surface-container-lowest">
+        <div class="w-full max-w-sm">
+          <div class="lg:hidden flex items-center gap-2 mb-12">
+            <span class="material-symbols-outlined text-primary text-3xl"
+              style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+            <span class="font-headline text-xl font-black tracking-tighter text-primary">Blue Links</span>
+          </div>
+          <div class="mb-10 text-center lg:text-left">
+            <h3 class="font-headline text-3xl font-extrabold text-primary mb-2">Welcome Back</h3>
+            <p class="text-secondary font-medium">Log in to your alumni account to continue.</p>
+          </div>
+          <div class="space-y-6">
+            <div class="space-y-2">
+              <label class="block text-sm font-semibold text-on-surface-variant ml-1">Alumni ID / Email</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">alternate_email</span>
+                <input
+                  class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-surface-tint/20 transition-all"
+                  placeholder="e.g. alumni.12345" type="text" ng-model="ctrl.loginData.email" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center px-1">
+                <label class="text-sm font-semibold text-on-surface-variant">Password</label>
+                <a class="text-xs font-bold text-primary hover:text-surface-tint transition-colors" href="#">Forgot
+                  Password?</a>
+              </div>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock_open</span>
+                <input
+                  class="w-full pl-12 pr-12 py-3.5 bg-surface-container-low border-none rounded-full focus:ring-2 focus:ring-surface-tint/20 transition-all"
+                  placeholder="••••••••" type="password" ng-model="ctrl.loginData.password" />
+              </div>
+            </div>
+            <div class="flex items-center gap-2 px-1">
+              <input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"
+                ng-model="ctrl.loginData.remember" />
+              <label class="text-sm font-medium text-secondary">Keep me logged in</label>
+            </div>
+            <button ng-click="ctrl.login()"
+              class="w-full knight-gradient text-white font-headline font-bold py-4 rounded-full shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all duration-200 mt-4">Login</button>
+          </div>
+          <div class="mt-12 text-center">
+            <div class="relative mb-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-surface-container-high"></div>
+              </div>
+              <div
+                class="relative flex justify-center text-xs uppercase tracking-widest font-bold text-outline-variant bg-surface-container-lowest px-4">
+                New to Blue Links?</div>
+            </div>
+            <button
+              class="w-full py-4 px-6 rounded-full bg-surface-container-high text-primary font-headline font-bold hover:bg-surface-variant transition-all duration-200 flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">person_add</span> Get Started / Register as Alumni
+            </button>
+          </div>
+          <div class="mt-12 lg:mt-24 text-center">
+            <p class="text-[10px] uppercase tracking-widest text-outline font-bold">© 2024 Blue Links University Alumni
+              Association</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- GLOBAL NAV -->
+  <header ng-show="ctrl.currentPage !== 'login'"
+    class="sticky top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl shadow-sm shadow-blue-900/5">
+    <div class="flex justify-between items-center max-w-screen-2xl mx-auto px-8 md:px-12 py-4">
+      <div class="flex items-center gap-8 md:gap-12">
+        <span ng-click="ctrl.navigate('home')"
+          class="text-2xl font-bold tracking-tighter text-blue-900 font-headline cursor-pointer">Blue Links</span>
+        <nav class="hidden md:flex gap-8 items-center font-headline tracking-tight text-sm">
+          <a ng-click="ctrl.navigate('home')" ng-class="{'nav-active': ctrl.currentPage === 'home'}"
+            class="text-slate-600 hover:text-blue-900 transition-colors cursor-pointer">Home</a>
+          <a ng-click="ctrl.navigate('jobs')" ng-class="{'nav-active': ctrl.currentPage === 'jobs'}"
+            class="text-slate-600 hover:text-blue-900 transition-colors cursor-pointer">Job Board</a>
+          <a ng-click="ctrl.navigate('applications')" ng-class="{'nav-active': ctrl.currentPage === 'applications'}"
+            class="text-slate-600 hover:text-blue-900 transition-colors cursor-pointer">Applications</a>
+          <a ng-click="ctrl.navigate('profile')" ng-class="{'nav-active': ctrl.currentPage === 'profile'}"
+            class="text-slate-600 hover:text-blue-900 transition-colors cursor-pointer">Profile</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="bg-slate-100 rounded-full px-4 py-2 flex items-center gap-2 hidden lg:flex">
+          <span class="material-symbols-outlined text-slate-400 text-sm">search</span>
+          <input class="bg-transparent border-none focus:ring-0 text-sm w-40" placeholder="Search..." type="text" />
+        </div>
+        <button ng-click="ctrl.navigate('settings')"
+          class="p-2 text-slate-500 hover:text-blue-900 transition-transform cursor-pointer"><span
+            class="material-symbols-outlined">settings</span></button>
+        <button ng-click="ctrl.navigate('profile')"
+          class="p-2 text-slate-500 hover:text-blue-900 transition-transform cursor-pointer"><span
+            class="material-symbols-outlined">account_circle</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE: HOME -->
+  <div ng-class="{'visible': ctrl.currentPage === 'home'}" class="page-home">
+    <main class="flex-grow pt-8 pb-16 px-6 md:px-12 max-w-screen-2xl mx-auto w-full">
+      <section class="hero-pattern relative rounded-lg overflow-hidden mb-12 p-8 md:p-12 text-on-primary shadow-lg">
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-end md:items-center gap-8">
+          <div class="space-y-4">
+            <span
+              class="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold tracking-widest uppercase">Official
+              Alumni Portal</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-headline">Welcome back,
+              Sean!</h1>
+            <div class="flex flex-wrap items-center gap-4 text-white/80">
+              <span class="flex items-center gap-2"><span class="material-symbols-outlined text-base">school</span>
+                Class of 2021 •  Information Technology</span>
+            </div>
+          </div>
+          <div class="flex gap-4 flex-wrap">
+            <button ng-click="ctrl.navigate('profile')"
+              class="bg-white text-primary px-6 md:px-8 py-4 rounded-full font-bold hover:scale-[1.02] transition-transform flex items-center gap-2"><span
+                class="material-symbols-outlined">edit_square</span> Update Profile</button>
+            <button
+              class="bg-white/10 backdrop-blur-md text-white px-6 md:px-8 py-4 rounded-full font-bold hover:scale-[1.02] transition-transform border border-white/20 flex items-center gap-2"><span
+                class="material-symbols-outlined">badge</span> Digital ID</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-16">
+        <h2 class="text-sm font-black text-secondary tracking-widest uppercase mb-8 ml-1">Quick Actions</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            class="group bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+            <div
+              class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-3xl">description</span></div>
+            <h3 class="text-xl font-bold font-headline mb-2 text-primary">Documents</h3>
+            <p class="text-secondary text-sm">Request transcripts, diplomas, and certifications online.</p>
+          </div>
+          <div ng-click="ctrl.navigate('jobs')"
+            class="group bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+            <div
+              class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-3xl">work</span></div>
+            <h3 class="text-xl font-bold font-headline mb-2 text-primary">Job Board</h3>
+            <p class="text-secondary text-sm">Explore career opportunities exclusive to alumni.</p>
+          </div>
+          <div
+            class="group bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+            <div
+              class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-3xl">volunteer_activism</span></div>
+            <h3 class="text-xl font-bold font-headline mb-2 text-primary">Donation</h3>
+            <p class="text-secondary text-sm">Support our future blue knights through scholarships.</p>
+          </div>
+          <div
+            class="group bg-surface-container-lowest p-8 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+            <div
+              class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-3xl">hub</span></div>
+            <h3 class="text-xl font-bold font-headline mb-2 text-primary">Network</h3>
+            <p class="text-secondary text-sm">Connect with peers across generations.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="lg:col-span-2">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-extrabold font-headline text-primary">Latest Updates</h2><a
+              class="text-primary font-bold text-sm hover:underline" href="#">View All News</a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <article class="group">
+              <div class="relative aspect-video rounded-lg overflow-hidden mb-4"><img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUyi_IutbJRtxaEX7Olb6c5Fc0LIpgcXpaYo7uh613kxtUsNWczKLWJEfvJSsvXOSOLNCExCIqdOMaaDMDEAKZFGE3-mu5VvE5oKFQAcnApImcPvtarrA4WzKHPRmgib9HrTaC8ChJoL9yItVABV2253_YAyCHHopR-neAXuZpV863NH9zwqvH9cB1T8lFuqu4SDZRh_ETfP_17_a4bJOLfHWWFRrFrqpIEAovtqPKDq_i_Uf83h6KBTi1VaDkUL9oTmePo3M4178" />
+                <div class="absolute top-4 left-4"><span
+                    class="bg-primary text-white text-[10px] font-black px-3 py-1 rounded-full">Featured</span></div>
+              </div>
+              <h4 class="text-xl font-bold font-headline text-primary mb-2">Grand Alumni Homecoming 2024</h4>
+              <p class="text-secondary text-sm">Get ready to reconnect and celebrate! The biggest gathering of the year
+                is set for December 15th.</p>
+            </article>
+            <article class="group">
+              <div class="relative aspect-video rounded-lg overflow-hidden mb-4"><img
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwbyNRajVcTfA-o41OU1BCh5lydFLBGzhPOtFSx_fonvnsnJW3oBN8e-UPUuGOgvrO4yKUigCdgTy30uRXmXcfldcl_enmPgNZUQZjxobju4Rlfbr6sg1I8ntD8jjmS_wIJr3fWT5PInY5KNKcekQieVR1qy3c4QgsUClMgaPWATzE012CIawD3zPLzPFvVbCXu5w1kcl954DxcfdsOosuK6u7xOUG_Uj6t_3cFNMBTtpf_Z4_bPOpG4qh3ePx2OhyUBnRMYobeJU" />
+                <div class="absolute top-4 left-4"><span
+                    class="bg-slate-200 text-primary text-[10px] font-black px-3 py-1 rounded-full">Infrastructure</span>
+                </div>
+              </div>
+              <h4 class="text-xl font-bold font-headline text-primary mb-2">New Innovation Hub Unveiled</h4>
+              <p class="text-secondary text-sm">State-of-the-art labs for IT and Engineering students now complete.</p>
+            </article>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-extrabold font-headline text-primary">Events</h2>
+          </div>
+          <div class="space-y-4">
+            <div
+              class="flex gap-6 p-4 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+              <div
+                class="flex flex-col items-center justify-center min-w-[70px] h-[70px] rounded-lg bg-white shadow-sm">
+                <span class="text-[10px] font-black uppercase text-secondary">Oct</span><span
+                  class="text-2xl font-bold text-primary">12</span></div>
+              <div>
+                <h5 class="font-bold text-primary">Alumni Webinar: Tech Trends</h5>
+                <p class="text-xs text-secondary">2:00 PM • Zoom</p>
+              </div>
+            </div>
+            <div
+              class="flex gap-6 p-4 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+              <div
+                class="flex flex-col items-center justify-center min-w-[70px] h-[70px] rounded-lg bg-white shadow-sm">
+                <span class="text-[10px] font-black uppercase text-secondary">Nov</span><span
+                  class="text-2xl font-bold text-primary">05</span></div>
+              <div>
+                <h5 class="font-bold text-primary">Blue Knight Golf Cup</h5>
+                <p class="text-xs text-secondary">City Golf Club • 7:00 AM</p>
+              </div>
+            </div>
+            <div
+              class="flex gap-6 p-4 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer">
+              <div
+                class="flex flex-col items-center justify-center min-w-[70px] h-[70px] rounded-lg bg-white shadow-sm">
+                <span class="text-[10px] font-black uppercase text-secondary">Dec</span><span
+                  class="text-2xl font-bold text-primary">20</span></div>
+              <div>
+                <h5 class="font-bold text-primary">Career Mentoring Workshop</h5>
+                <p class="text-xs text-secondary">Grand Hall • 10:00 AM</p>
+              </div>
+            </div>
+          </div>
+          <button class="w-full mt-8 py-4 bg-slate-200 text-primary font-bold rounded-full hover:bg-slate-300">Browse
+            Calendar</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PAGE: JOB BOARD -->
+  <div ng-class="{'visible': ctrl.currentPage === 'jobs'}" class="page-jobs"
+    style="max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; width: 100%;">
+    <aside class="h-screen sticky top-20 w-72 flex-shrink-0 flex flex-col py-8 pr-6">
+      <div class="mb-8">
+        <h2 class="text-lg font-bold text-blue-900">Job Filters</h2>
+        <p class="text-slate-500 text-xs">Refine your search</p>
+      </div>
+      <nav class="space-y-1 mb-8">
+        <a
+          class="flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-semibold rounded-r-full shadow-sm hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">work</span><span>All Jobs</span></a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">bookmark</span><span>Saved</span></a>
+        <a ng-click="ctrl.navigate('applications')"
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">assignment_turned_in</span><span>My Applications</span></a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">school</span><span>Career Coaching</span></a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">event</span><span>Events</span></a>
+      </nav>
+      <div class="space-y-6 pt-6 border-t border-slate-200/50">
+        <div><span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-3">Skills</span>
+          <div class="flex flex-wrap gap-2"><span
+              class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-xs">Angular</span><span
+              class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-xs">Python</span><span
+              class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs">UX Design</span></div>
+        </div>
+        <div><span class="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mb-3">Job
+            Type</span><label class="flex items-center gap-2 mb-2 text-slate-600"><input checked
+              class="rounded text-primary" type="checkbox" /> Full-time</label><label
+            class="flex items-center gap-2 text-slate-600"><input class="rounded text-primary" type="checkbox" />
+            Remote</label></div>
+      </div>
+      <button
+        class="mt-auto bg-gradient-to-r from-primary to-primary-container text-white py-4 px-6 rounded-full font-bold shadow-lg shadow-blue-900/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"><span
+          class="material-symbols-outlined">add</span> Post a Job</button>
+    </aside>
+    <main class="flex-1 py-8 px-6 max-w-screen-xl">
+      <section class="mb-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div class="max-w-xl"><span
+              class="text-xs font-bold uppercase tracking-widest text-primary-container mb-2 block">Welcome back,
+              Sean</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-primary tracking-tight">Find your next <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">breakthrough</span>
+              role.</h1>
+          </div>
+          <div class="flex-1 max-w-md">
+            <div class="relative"><span
+                class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">search</span><input
+                class="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border-none shadow-sm"
+                placeholder="Design, Engineering, Marketing..." type="text" /></div>
+          </div>
+        </div>
+      </section>
+      <section class="mb-16">
+        <div class="flex items-baseline justify-between mb-8">
+          <h3 class="text-xl font-bold text-primary">Partner Firms</h3><a
+            class="text-sm font-semibold text-blue-600 hover:underline" href="#">View all partners</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="bg-primary p-8 rounded-lg text-white flex flex-col justify-between h-64 relative overflow-hidden group cursor-pointer">
+            <div class="z-10">
+              <div class="w-12 h-12 bg-white/10 backdrop-blur rounded-xl mb-4 flex items-center justify-center"><span
+                  class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span></div>
+              <h4 class="text-xl font-bold mb-1">Stellar Systems</h4>
+              <p class="text-white/60 text-sm">Advanced Infrastructure</p>
+            </div>
+            <div class="z-10"><span class="text-xs px-2 py-1 bg-white/10 rounded">12 Openings</span></div>
+          </div>
+          <div
+            class="bg-surface-container-low p-8 rounded-lg flex flex-col justify-between h-64 border hover:bg-white transition-colors cursor-pointer">
+            <div>
+              <div class="w-12 h-12 bg-blue-100 rounded-xl mb-4 flex items-center justify-center text-blue-600"><span
+                  class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">architecture</span></div>
+              <h4 class="text-xl font-bold text-primary mb-1">Arch &amp; Co.</h4>
+              <p class="text-slate-500 text-sm">Urban Design Collective</p>
+            </div>
+            <div class="text-primary font-semibold text-sm">8 Openings</div>
+          </div>
+          <div
+            class="bg-surface-container-low p-8 rounded-lg flex flex-col justify-between h-64 border hover:bg-white transition-colors cursor-pointer">
+            <div>
+              <div class="w-12 h-12 bg-blue-100 rounded-xl mb-4 flex items-center justify-center text-blue-600"><span
+                  class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">biotech</span></div>
+              <h4 class="text-xl font-bold text-primary mb-1">BioSphere Labs</h4>
+              <p class="text-slate-500 text-sm">Genetic Engineering</p>
+            </div>
+            <div class="text-primary font-semibold text-sm">5 Openings</div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="flex items-baseline justify-between mb-8">
+          <h3 class="text-xl font-bold text-primary">Jobs For You</h3>
+        </div>
+        <div class="space-y-4">
+          <div ng-click="ctrl.navigate('applications')"
+            class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer">
+            <div class="flex gap-5">
+              <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center"><img
+                  class="w-10 h-10 object-contain"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp-22Qog3IbpF08ygP2cWsUqUYXRjrOaQPlK-2mYo0O2CqDAcQf1rrM9IQOH4YWOAmEaG_Vl7QjtCiDHXzuU1gbfLIWmLwfcq-Kwv_DduKRCxL72uft89iiYCdy_R6xT7hNXS_bH4qLubPu3KwG8cCw60X5hFoLf9R7f88kwDLzlI8yGw96CxiVJlcnLjQbbj2VsdiQa8giS9kS5khZqxBUFqvGhr7nRzRYvFintjubj8tcMcMIybRInx4Kyg91zyzKHfurT4gfzk"
+                  alt="logo" /></div>
+              <div>
+                <h4 class="font-bold text-lg text-primary">Senior Angular Developer</h4>
+                <div class="flex flex-wrap items-center gap-4 mt-1 text-sm text-slate-500"><span
+                    class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">apartment</span>
+                    TechFlow Solutions</span><span class="flex items-center gap-1"><span
+                      class="material-symbols-outlined text-[18px]">location_on</span> New York, NY (Remote)</span><span
+                    class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">payments</span>
+                    ₱140k - ₱180k</span></div>
+              </div>
+            </div>
+            <div><span
+                class="px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-xs font-bold uppercase">Shortlisted</span>
+            </div>
+          </div>
+          <div
+            class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-slate-200 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer">
+            <div class="flex gap-5">
+              <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center"><img
+                  class="w-10 h-10 object-contain"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYHvEhC94p8kx3T0rOelUQngMFOQtRFBWUiaEshbxy86Ot0OptNXs6ltrtuutqSHi75Y3AmQlnUaj6y_dv_dasvGvwbCH6_2t5s33U8BbIPMTRCCSk1DmO96dI5NrjXPhZYPmMmMb0-ba7064zFhYXy-X3jRe5FzF7YGaE1NgBR6h-dLmA-PUjVipXfDM46XeAbm1Rd4mOEGgUKQjBOQGCN-kHrspqK_jTjI9qNgvXMwObwBfgqS1ZCGLjEhnmh8biTKKTqyRM65Q"
+                  alt="logo" /></div>
+              <div>
+                <h4 class="font-bold text-lg text-primary">UX Research Lead</h4>
+                <div class="flex flex-wrap items-center gap-4 mt-1 text-sm text-slate-500"><span
+                    class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">apartment</span>
+                    Humanize AI</span><span class="flex items-center gap-1"><span
+                      class="material-symbols-outlined text-[18px]">location_on</span> San Francisco, CA</span><span
+                    class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">payments</span>
+                    ₱120k - ₱160k</span></div>
+              </div>
+            </div>
+            <div><span class="px-4 py-1.5 bg-slate-100 text-slate-500 rounded-full text-xs font-bold uppercase">Under
+                Review</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PAGE: APPLICATIONS (FULL) -->
+  <div ng-class="{'visible': ctrl.currentPage === 'applications'}" class="page-applications">
+    <main class="max-w-7xl mx-auto px-6 md:px-8 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-8 space-y-12">
+          <section>
+            <span class="text-xs font-bold uppercase tracking-widest text-primary mb-4 block">Application Ref:
+              #BL-72941</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-primary mb-2 font-headline">Junior Full Stack Developer
+            </h1>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center overflow-hidden"><img
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTPSVKmalA4oFMDCLh3y8HTI8HR95umrP4qn8l9R-yw_-xTGCOPLRBa3uPF0PWM4qSgwTVL526I-BwI1ILEkLJUjl23ae4qAatIITQzEX0NxciWnozMMvYo5Oy1XddJ2i_kFW8_nUItiKX-vCdbrwtw54QWGJFJ5S2hnfuI5tUgVAau4cgNtzJfCsUUnRVXQ6H8CSikBoTRn7eG8JPRChUc-fHdiVO1R0UWXIdKO9ubNYprbZO_sJY6bbMXVPyO74kGBPFXO1hpaE"
+                  alt="company logo" /></div>
+              <div>
+                <p class="text-xl font-bold text-on-surface">Vanguard Systems Inc.</p>
+                <p class="text-secondary font-medium">Palo Alto, CA • Remote Hybrid</p>
+              </div>
+            </div>
+          </section>
+          <section class="bg-surface-container-low rounded-lg p-8 md:p-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 opacity-10"><span
+                class="material-symbols-outlined text-[120px] text-primary">assignment_turned_in</span></div>
+            <h2 class="text-2xl font-bold text-primary mb-10 font-headline">Application Journey</h2>
+            <div class="relative space-y-10 pl-8">
+              <div class="absolute left-[7px] top-2 bottom-2 w-[2px] bg-outline-variant opacity-30"></div>
+              <div class="relative flex items-start gap-8">
+                <div
+                  class="absolute -left-[31px] w-[14px] h-[14px] bg-primary rounded-full ring-8 ring-surface-container-low">
+                </div>
+                <div>
+                  <p class="font-bold text-primary">Application Sent</p>
+                  <p class="text-sm text-secondary">October 12, 2023 • 10:45 AM</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-8">
+                <div
+                  class="absolute -left-[31px] w-[14px] h-[14px] bg-primary rounded-full ring-8 ring-surface-container-low">
+                </div>
+                <div>
+                  <p class="font-bold text-primary">Initial Screening</p>
+                  <p class="text-sm text-secondary">October 15, 2023 • Recruiter: Sarah Chen</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-8">
+                <div
+                  class="absolute -left-[31px] w-[14px] h-[14px] bg-primary rounded-full ring-8 ring-surface-container-low animate-pulse">
+                </div>
+                <div
+                  class="bg-surface-container-lowest p-6 rounded-lg shadow-sm border-l-4 border-primary-container -mt-4 w-full">
+                  <div class="flex justify-between items-center mb-2">
+                    <p class="font-bold text-primary text-lg">Final Interview Phase</p><span
+                      class="bg-primary-container text-white text-[10px] uppercase px-3 py-1 rounded-full font-bold">Active</span>
+                  </div>
+                  <p class="text-sm text-on-surface-variant mb-4">Technical interview with Engineering Lead completed.
+                    The team is currently finalizing the offer package.</p>
+                  <div class="flex items-center gap-2 text-primary font-semibold text-sm"><span
+                      class="material-symbols-outlined text-sm">event</span><span>Last Update: 2 hours ago</span></div>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-8 opacity-40">
+                <div
+                  class="absolute -left-[31px] w-[14px] h-[14px] border-2 border-outline-variant bg-surface-container-low rounded-full ring-8 ring-surface-container-low">
+                </div>
+                <div>
+                  <p class="font-bold text-secondary">Offer Extended</p>
+                  <p class="text-sm text-secondary">Awaiting decision from hiring manager</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="space-y-6">
+            <h2 class="text-2xl font-bold text-primary font-headline">Submitted Materials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div
+                class="bg-surface-container-lowest p-6 rounded-lg shadow-sm group hover:scale-[1.02] transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-blue-900 mb-4 block">description</span>
+                <p class="font-bold truncate">Full_Stack_Resume_2023.pdf</p>
+                <p class="text-xs text-secondary uppercase mt-1">Resume</p>
+              </div>
+              <div
+                class="bg-surface-container-lowest p-6 rounded-lg shadow-sm group hover:scale-[1.02] transition-all cursor-pointer">
+                <span class="material-symbols-outlined text-blue-900 mb-4 block">article</span>
+                <p class="font-bold truncate">Vanguard_Cover_Letter.pdf</p>
+                <p class="text-xs text-secondary uppercase mt-1">Cover Letter</p>
+              </div>
+              <div
+                class="bg-surface-container-low border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center p-6 rounded-lg hover:border-primary-container transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-secondary mb-2">add_circle</span>
+                <p class="text-sm font-semibold text-secondary">Add Document</p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="lg:col-span-4 space-y-8">
+          <div
+            class="bg-primary text-white p-8 md:p-10 rounded-lg shadow-xl shadow-primary/20 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-48 h-48 bg-primary-container rounded-full opacity-50 blur-3xl">
+            </div>
+            <h3 class="text-xl font-bold mb-8 relative z-10 font-headline">Offer Highlights</h3>
+            <div class="space-y-8 relative z-10">
+              <div class="flex items-center gap-6">
+                <div class="bg-white/10 p-3 rounded-full"><span class="material-symbols-outlined">payments</span></div>
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-primary-fixed/60 font-bold">Annual Salary</p>
+                  <p class="text-2xl font-bold">₱125,000 PHP</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-6">
+                <div class="bg-white/10 p-3 rounded-full"><span class="material-symbols-outlined">calendar_today</span>
+                </div>
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-primary-fixed/60 font-bold">Target Start Date</p>
+                  <p class="text-xl font-bold">January 15, 2024</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-6">
+                <div class="bg-white/10 p-3 rounded-full"><span class="material-symbols-outlined">verified_user</span>
+                </div>
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-primary-fixed/60 font-bold">Benefits</p>
+                  <ul class="text-sm font-medium space-y-1 mt-1">
+                    <li>• 401(k) 4% Matching</li>
+                    <li>• Unlimited PTO</li>
+                    <li>• Annual Learning Stipend</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-white/10">
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">info</span>
+                <p class="text-xs text-primary-fixed/80 italic">This is a preliminary summary based on early
+                  discussions. Official contract to follow.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest p-8 rounded-lg shadow-sm space-y-6">
+            <h3 class="text-lg font-bold text-primary font-headline">Recruiter Notes</h3>
+            <div class="flex gap-4"><img class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTvcNUVC9SunZvhZvFWxcoKCMmI2Jt5j4btLb4JnYJhiWjKQl7xWiaKUH4pSPUU1Xt_o8Jw0oQgsb4y7YIGkZiVi64eoJHL2pFE3_HjGk9YQYJnhWxuL2euLun6VPC0q7id4E_PatNuK--856DbDiS-9GAFqUXu17lGgclQngtAn_Q5qAT6lCGCgBgCft0Xs1LnaEf52txl6NqjuKaCVVRun4J-qVGMJyGxmlnR92Q5d449uQrJfb-m9hgQZ4xepn2ilCq88yawkQ"
+                alt="recruiter" />
+              <div class="bg-surface-container-low p-4 rounded-lg rounded-tl-none">
+                <p class="text-sm text-on-surface italic">"The engineering team was very impressed with your performance
+                  in the system design round. We're excited to move forward!"</p>
+                <p class="text-[10px] text-secondary font-bold uppercase mt-2">— Sarah Chen, Talent Acquisition</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4"><button
+              class="w-full bg-primary-container hover:bg-primary-container/90 text-white font-bold py-5 rounded-full transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2"><span
+                class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span> Accept
+              Offer</button><button
+              class="w-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-bold py-5 rounded-full transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"><span
+                class="material-symbols-outlined">cancel</span> Decline Application</button><button
+              class="w-full text-secondary hover:text-primary font-bold text-xs uppercase tracking-widest py-2 transition-all">Request
+              Revision or Call</button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PAGE: PROFILE (FULL) -->
+  <div ng-class="{'visible': ctrl.currentPage === 'profile'}" class="page-profile">
+    <main class="pt-8 pb-24 px-6 md:px-12 max-w-screen-2xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-4 space-y-8">
+          <div class="bg-surface-container-lowest rounded-lg p-8 shadow-sm text-center lg:text-left">
+            <div class="relative inline-block lg:block mb-6"><img
+                class="w-32 h-32 rounded-full object-cover mx-auto lg:mx-0 border-4 border-surface-container"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtKj9hmIKR-8ZQB8-348vwlHAKp1N--ik8goktyYGPjIxab-Cm6ETE6WXAsHOQ0OJCq2Jo3LRyHKv7kEwG9hzZqS0Yo2iPeYARkk9SHanHxt5rMV3iwEi8oHzwyFnKoaNdzeRzs1fKoyvcMnVQC0LzUqVFDxJVsSjDDR914VPfWQN3StcungRymrfkjHAJxz-tDW5Fkb8KBb_x_txFnbqTp0v3ME_7Z0iUc5mElpCGgCMbFM0cdbRdBlUW0cP06k8eNBMtnO4_lUU"
+                alt="Sean" />
+              <div class="absolute bottom-1 right-1 lg:left-24 bg-primary text-on-primary p-1.5 rounded-full shadow-lg">
+                <span class="material-symbols-outlined text-sm"
+                  style="font-variation-settings: 'FILL' 1;">verified</span></div>
+            </div>
+            <h1 class="text-3xl font-extrabold text-primary mb-1 font-headline">Sean</h1>
+            <p class="text-secondary font-medium mb-4">Class of 2021 • Information Technology</p>
+            <div
+              class="inline-flex items-center gap-2 bg-secondary-container px-4 py-1.5 rounded-full text-on-secondary-container text-xs font-bold uppercase tracking-widest">
+              <span class="material-symbols-outlined text-sm"
+                style="font-variation-settings: 'FILL' 1;">verified_user</span> Verified Alumni</div>
+            <div class="mt-8 pt-8 border-t border-surface-container-high">
+              <div class="flex items-center justify-between text-sm mb-4"><span class="text-secondary">Member
+                  since</span><span class="font-semibold text-primary">Sept 2021</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-secondary">Profile
+                  Status</span><span class="text-emerald-600 font-bold">100% Complete</span></div>
+            </div>
+          </div>
+          <div class="bg-primary-container rounded-lg p-8 text-on-primary">
+            <h3 class="font-headline text-lg font-bold mb-4 opacity-90">Career Impact</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg"><span
+                  class="block text-2xl font-bold">12</span><span
+                  class="text-xs uppercase tracking-tighter opacity-70">Referrals</span></div>
+              <div class="bg-white/10 backdrop-blur-md p-4 rounded-lg"><span
+                  class="block text-2xl font-bold">45</span><span
+                  class="text-xs uppercase tracking-tighter opacity-70">Connections</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-8">
+          <div class="mb-12"><span
+              class="text-primary font-bold uppercase tracking-[0.2em] text-xs mb-2 block">Management Portal</span>
+            <h2 class="text-4xl font-extrabold text-primary tracking-tighter font-headline">Profile &amp; Account</h2>
+          </div>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div
+              class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+              <div class="flex items-start justify-between mb-8">
+                <div class="bg-surface-container p-3 rounded-full group-hover:scale-110 transition-transform"><span
+                    class="material-symbols-outlined text-primary">person_outline</span></div><span
+                  class="material-symbols-outlined text-outline-variant">chevron_right</span>
+              </div>
+              <h3 class="text-xl font-bold text-primary mb-2 font-headline">Personal Information</h3>
+              <p class="text-secondary text-sm leading-relaxed">Update your contact details, address, and biographical
+                information.</p>
+            </div>
+            <div
+              class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+              <div class="flex items-start justify-between mb-8">
+                <div class="bg-surface-container p-3 rounded-full group-hover:scale-110 transition-transform"><span
+                    class="material-symbols-outlined text-primary">school</span></div><span
+                  class="material-symbols-outlined text-outline-variant">chevron_right</span>
+              </div>
+              <h3 class="text-xl font-bold text-primary mb-2 font-headline">Academic Records</h3>
+              <p class="text-secondary text-sm leading-relaxed">Access transcripts, graduation certificates, and honors
+                history.</p>
+            </div>
+            <div
+              class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+              <div class="flex items-start justify-between mb-8">
+                <div class="bg-surface-container p-3 rounded-full group-hover:scale-110 transition-transform"><span
+                    class="material-symbols-outlined text-primary">badge</span></div><span
+                  class="material-symbols-outlined text-outline-variant">chevron_right</span>
+              </div>
+              <h3 class="text-xl font-bold text-primary mb-2 font-headline">Alumni ID</h3>
+              <p class="text-secondary text-sm leading-relaxed">Manage your digital alumni card and campus access
+                permissions.</p>
+            </div>
+            <div ng-click="ctrl.navigate('jobs')"
+              class="group bg-surface-container-lowest p-6 rounded-lg shadow-sm hover:bg-surface-bright transition-all cursor-pointer">
+              <div class="flex items-start justify-between mb-8">
+                <div class="bg-surface-container p-3 rounded-full group-hover:scale-110 transition-transform"><span
+                    class="material-symbols-outlined text-primary">work_outline</span></div><span
+                  class="material-symbols-outlined text-outline-variant">chevron_right</span>
+              </div>
+              <h3 class="text-xl font-bold text-primary mb-2 font-headline">Job Preferences</h3>
+              <p class="text-secondary text-sm leading-relaxed">Tailor your career alerts, industries of interest, and
+                salary range.</p>
+            </div>
+          </div>
+          <div class="mt-16">
+            <h2 class="text-2xl font-bold text-primary tracking-tight mb-8 font-headline">App Settings</h2>
+            <div class="bg-surface-container-low rounded-lg overflow-hidden">
+              <div ng-click="ctrl.navigate('settings')"
+                class="flex items-center justify-between p-6 hover:bg-surface-container transition-colors cursor-pointer group">
+                <div class="flex items-center gap-4"><span
+                    class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">settings</span><span
+                    class="font-semibold text-on-surface">Application Settings</span></div><span
+                  class="material-symbols-outlined text-outline-variant"
+                  style="font-size:16px;">arrow_forward_ios</span>
+              </div>
+              <div ng-click="ctrl.logout()"
+                class="flex items-center justify-between p-6 hover:bg-error-container/20 transition-colors cursor-pointer group border-t border-surface-container-high">
+                <div class="flex items-center gap-4"><span
+                    class="material-symbols-outlined text-error">logout</span><span
+                    class="font-semibold text-error">Logout</span></div><span
+                  class="text-xs font-bold text-error uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">End
+                  Session</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PAGE: SETTINGS -->
+  <div ng-class="{'visible': ctrl.currentPage === 'settings'}" class="page-settings"
+    style="max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; width: 100%;">
+    <aside class="h-screen sticky top-20 w-72 flex-shrink-0 flex flex-col py-8 pr-6">
+      <div class="mb-8">
+        <h2 class="font-headline text-blue-900 font-bold text-lg uppercase">Settings</h2>
+        <p class="text-slate-500 text-xs uppercase mt-1">Manage your account</p>
+      </div>
+      <nav class="space-y-1"><a
+          class="flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-semibold rounded-r-full shadow-sm hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">account_circle</span><span>Profile</span></a><a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">visibility_off</span><span>Stealth Mode</span></a><a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">lock</span><span>Security</span></a><a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">notifications</span><span>Notifications</span></a><a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200 rounded-r-full hover:translate-x-1 cursor-pointer"><span
+            class="material-symbols-outlined">block</span><span>Blocked Companies</span></a></nav>
+      <div class="mt-auto"><button
+          class="w-full bg-primary-container text-white font-semibold py-3 rounded-full hover:scale-[1.02] transition-all shadow-md">Contact
+          Support</button></div>
+    </aside>
+    <main class="flex-1 py-12 pl-6 pr-6 space-y-12 max-w-screen-xl">
+      <section class="relative overflow-hidden rounded-xl stealth-gradient p-8 md:p-12 text-on-primary">
+        <div class="relative z-10 max-w-2xl"><span
+            class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-4">Privacy
+            Feature</span>
+          <h1 class="font-headline text-4xl md:text-5xl font-extrabold mb-4">Stealth Mode</h1>
+          <p class="text-blue-100 text-lg">Browse the Blue Links job board anonymously. When active, current employers
+            and specific companies will not be able to see your profile or activity status.</p>
+          <div class="mt-8 flex items-center gap-4">
+            <div class="w-14 h-8 bg-white/20 rounded-full relative cursor-pointer p-1">
+              <div class="w-6 h-6 bg-white rounded-full shadow-lg"></div>
+            </div><span class="font-bold text-sm">Enable Stealth Mode</span>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="flex justify-between items-end mb-6">
+          <div>
+            <h3 class="font-headline text-2xl font-bold text-primary">Academic Identity</h3>
+            <p class="text-secondary text-sm">Your information as it appears to alumni and recruiters.</p>
+          </div><button class="text-primary font-semibold text-sm hover:underline">Request Data Export</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div><label class="block text-sm text-on-surface-variant font-medium mb-1">Full Name</label><input
+              class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3" type="text"
+              value="Sean Bandigan" /></div>
+          <div><label class="block text-sm text-on-surface-variant font-medium mb-1">Graduation Year</label><input
+              class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3" type="text" value="2021" /></div>
+          <div><label class="block text-sm text-on-surface-variant font-medium mb-1">University Email</label><input
+              class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3" type="email"
+              value="sean.bandigan@alumniaddu.edu.ph" /></div>
+          <div><label class="block text-sm text-on-surface-variant font-medium mb-1">Contact Number</label><input
+              class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3" type="tel"
+              value="+1 (555) 123-4567" /></div>
+        </div>
+      </section>
+      <div class="flex justify-end gap-4 py-8"><button
+          class="bg-surface-container-high text-secondary px-8 py-4 rounded-full font-bold hover:bg-surface-container-highest">Discard
+          Changes</button><button
+          class="bg-primary text-white px-8 py-4 rounded-full font-bold hover:scale-[1.03] transition-all shadow-lg">Save
+          Preferences</button></div>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer ng-show="ctrl.currentPage !== 'login'" class="w-full border-t border-slate-200/50 bg-slate-50 mt-auto">
+    <div
+      class="max-w-screen-2xl mx-auto px-8 md:px-12 py-16 flex flex-col md:flex-row justify-between items-center gap-8">
+      <div><span class="text-lg font-black text-blue-900 font-headline block text-center md:text-left">Blue Links</span>
+        <p class="text-slate-500 text-sm mt-2 text-center md:text-left">Connecting generations of Blue Knights since
+          1954.</p>
+      </div>
+      <div class="text-slate-500 text-xs text-center">© 2024 Blue Links Alumni Association. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    var app = angular.module('BlueLinksApp', []);
+    app.controller('MainController', [function () {
+      var ctrl = this;
+      ctrl.currentPage = 'login';
+      ctrl.loginData = { email: '', password: '', remember: false };
+      ctrl.navigate = function (page) {
+        ctrl.currentPage = page;
+        window.scrollTo(0, 0);
+      };
+      ctrl.login = function () {
+        if (ctrl.loginData.email && ctrl.loginData.password) {
+          ctrl.navigate('home');
+        } else {
+          alert('Please enter your Alumni ID/Email and Password.');
+        }
+      };
+      ctrl.logout = function () {
+        ctrl.loginData = { email: '', password: '', remember: false };
+        ctrl.navigate('login');
+      };
+    }]);
+  </script>
+</body>
+
+</html>
