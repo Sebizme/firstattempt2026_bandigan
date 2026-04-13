@@ -9,7 +9,7 @@ Turning the mobile phone design prototype of the job application/posting into a 
 ### Installation
 
 To replicate and run this project on a different computer. Follow the following steps.
-## 🚀 Setup & Run the Project (AngularJS)
+## Setup & Run the Project (AngularJS)
 
 ### 1. Install Prerequisites
 
