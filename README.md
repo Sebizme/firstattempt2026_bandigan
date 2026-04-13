@@ -129,4 +129,11 @@ nvm use <version>
 ### Prompt
 Act as a senior developer and convert this phone application design into a website. Stricly follow the color palette. Do not leave unnecessary details from the login page, to dashboard, to jobs section, to settings, to profile. Follow the fonts and color used, and everything shown from the images. Do not use emoji as icons, only icons same in the images. Make the website static only. While converting this design into a website, use the angular javascript framework. The website should be easy to use but follow a clean look layout of the website.
 
+#### Screenshots
+
+### Home Page
+![Login Page](./images/Screenshot1.png)
+
+### Login Page
+![Home Page](./images/Screenshot2.png)
 
