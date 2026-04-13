@@ -2,11 +2,11 @@
 
 Turning the mobile phone design prototype of the job application/posting into a website using the angular javascript framework. 
 
-#### Framework: Angular JS
+### Framework: Angular JS
 
-#### Module: Job Posting
+### Module: Job Posting
 
-#### Installation
+### Installation
 
 To replicate and run this project on a different computer. Follow the following steps.
 ## 🚀 Setup & Run the Project (AngularJS)
