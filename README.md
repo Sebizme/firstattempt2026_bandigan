@@ -1,6 +1,6 @@
 ## Bandigan
 
-Turning the mobile phone design prototype into a website using the angular javascript framework. This is 
+Turning the mobile phone design prototype of the job application/posting into a website using the angular javascript framework. 
 
 #### Framework: Angular JS
 
