@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background circle -->
+  <rect width="512" height="512" rx="128" fill="#00104e"/>
+
+  <!-- Shield shape -->
+  <path d="M256 80
+    L368 128
+    L368 256
+    Q368 352 256 432
+    Q144 352 144 256
+    L144 128
+    Z"
+    fill="#002080"
+    stroke="#b9c3ff"
+    stroke-width="8"
+  />
+
+  <!-- Heart inside shield -->
+  <path d="M256 320
+    Q210 290 195 255
+    Q178 214 205 193
+    Q225 178 256 210
+    Q287 178 307 193
+    Q334 214 317 255
+    Q302 290 256 320Z"
+    fill="#b9c3ff"
+  />
+
+  <!-- BL monogram text -->
+  <text x="256" y="220"
+    font-family="Georgia, serif"
+    font-size="72"
+    font-weight="900"
+    fill="white"
+    text-anchor="middle"
+    opacity="0.15"
+  >BL</text>
+</svg>
